@@ -1,20 +1,50 @@
+
+#include <asm/param.h>
+#include <linux/gcd.h>
+#include <linux/hash.h>
 #include <linux/init.h>
+#include <linux/jiffies.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+
+static unsigned long start_jiffies; 
+
+
 /* This function is called when the module is loaded. */
-int simple init(void)
+int simple_init(void)
 {
-printk(KERN INFO "Loading Kernel Module∖n");
-return 0;
+    start_jiffies = jiffies;
+
+    printk(KERN_INFO "Loading Kernel Module\n");
+    printk(KERN_INFO "%u\n", GOLDEN_RATIO_PRIME);
+    printk(KERN_INFO "The value of jiffies is: %lu\n", start_jiffies);
+    printk(KERN_INFO "The value of HZ is: %d\n", HZ);
+    
+    return 0;
 }
 /* This function is called when the module is removed. */
-void simple exit(void)
+void simple_exit(void)
 {
-printk(KERN INFO "Removing Kernel Module∖n");
+    unsigned long elapsed_jiffies;
+    unsigned long elapsed_seconds;
+    unsigned long finish_jiffies = jiffies;
+
+    elapsed_jiffies = finish_jiffies - start_jiffies;
+
+    elapsed_seconds = elapsed_jiffies / HZ;
+    
+    printk(KERN_INFO "Removing Kernel Module\n");
+    printk(KERN_INFO "The value of jiffies is: %lu\n", finish_jiffies);
+    printk(KERN_INFO "Greatest Common Divisor: %u\n", gcd(3300, 24));
+    printk(KERN_INFO "Elapsed time: %lu seconds\n", elapsed_seconds);
+
 }
+
+
 /* Macros for registering module entry and exit points. */
-module init(simple init);
-module exit(simple exit);
-MODULE LICENSE("GPL");
-MODULE DESCRIPTION("Simple Module");
-MODULE AUTHOR("SGG");
+module_init(simple_init);
+module_exit(simple_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("Simple Module");
+MODULE_AUTHOR("SGG");
