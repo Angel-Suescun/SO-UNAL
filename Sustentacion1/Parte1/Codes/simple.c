@@ -1,11 +1,11 @@
 
+#include <asm/param.h>
+#include <linux/gcd.h>
+#include <linux/hash.h>
 #include <linux/init.h>
+#include <linux/jiffies.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/hash.h>
-#include <linux/gcd.h>
-#include <linux/jiffies.h>
-#include <asm/param.h>
 
 static unsigned long start_jiffies; 
 
