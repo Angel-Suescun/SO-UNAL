@@ -1,4 +1,5 @@
 #include "sudoku.h"
+#include "thread_validator.h"
 
 #include <iostream>
 
@@ -13,16 +14,18 @@ int main(int argc, char const *argv[])
     SudokuGrid grid;
 
     if (!loadSudokuFromFile(argv[1], grid)) {
-        return 1; 
+
+        std::cerr << "Error al cargar el archivo del sudoku\n";
+        return 1;
+         
     }
 
     std::cout << "Sudoku cargado correctamente \n";
 
-    for (const auto& row : grid) {
-        for (int value : row) {
-            std::cout << value << ' ';
-        }
-        std::cout << '\n';
+    if (validateSudokuConcurrently(grid)) {
+        std::cout << "El sudoku es válido\n";
+    } else {
+        std::cout << "El sudoku no es válido\n";
     }
 
     return 0;
