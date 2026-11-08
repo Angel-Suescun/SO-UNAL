@@ -3,8 +3,7 @@
 
 #include "sudoku.h"
 
-#include <vector>
 
-bool validateSudokuConcurrently(const SudokuGrid& grid);
+bool validateSudokuConcurrent(const SudokuGrid& grid, int threadCount);
 
 #endif

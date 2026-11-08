@@ -4,69 +4,50 @@
 #include <thread>
 #include <vector>
 
-bool validateSudokuConcurrently(const SudokuGrid& grid) {
+bool validateSudokuConcurrent(  const SudokuGrid& grid, int threadCount) {
     
-    const int threadCount = 11;
+    const int taskCount = 27;
+
+    if (threadCount < 1 || threadCount > taskCount) {
+        return false;
+    }
     
-    std::vector<int> results(threadCount, 0);
+    std::vector<int> results(taskCount, 0);
     std::vector<std::thread> workers;
 
-    workers.emplace_back([&grid, &results]() {
+    for (int threadIndex = 0; threadIndex < threadCount; threadIndex++) {
         
-        bool valid =  true;
+        workers.emplace_back([&grid, &results, threadIndex, threadCount]() {
 
-        for (int row = 0; row < GRID_SIZE; row++) {
-            
-            valid &= validateRow(grid, row);
-        
-        }
-        results[0] = valid ? 1 : 0;
-    });
-
-    workers.emplace_back([&grid, &results]() {
-        
-        bool valid =  true;
-
-        for (int column = 0; column < GRID_SIZE; column++) {
-            
-            valid &= validateColumn(grid, column);
-        
-        }
-        results[1] = valid ? 1 : 0;
-    });
-
-    for (int row = 0; row < GRID_SIZE; row += 3) {
-        for (int column = 0; column < GRID_SIZE; column += 3) {
-            
-            int resultIndex = 2 + (row / 3) * 3 + (column / 3);
-
-            workers.emplace_back([&grid, &results, row, column, resultIndex]() {
+            for (int task = threadIndex; task < taskCount; task += threadCount) {
                 
-                results[resultIndex] = 
-                    validateSubgrid(grid, row, column) ? 1 : 0;
-            
-                });
-        }
+                if (task < 9) {
+                    results[task] = validateRow(grid, task) ? 1 : 0;
+                } else if (task < 18) {
+                    int column = task - 9;
+                    results[task] = validateColumn(grid, column) ? 1 : 0;
+                } else {
+                    int subgrid = task - 18;
+                    
+                    int startRow = (subgrid / 3) * 3;
+                    int startCol = (subgrid % 3) * 3;
+                    results[task] = validateSubgrid(grid, startRow, startCol) ? 1 : 0;
+                }
+            }
+        });
     }
 
     for (auto& worker : workers) {
+        worker.join();
+    }
 
-            worker.join();
-
+    for (int result : results) {
+        if (result == 0) {
+            return false;
         }
+    }
 
-        for (int result : results) {
-
-            if (result == 0) {
-
-                return false;
-            
-            }
-        
-        }
-
-        return true;
-
+    return true;
 }
 
 
