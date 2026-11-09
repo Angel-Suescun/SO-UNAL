@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 os.makedirs("results", exist_ok=True)
 
-input_file = 'results/benchmark_results.csv'
+input_file = 'results/benchmark.csv'
 output_file = 'results/benchmark_plot.png'
 
 threads = []
