@@ -15,8 +15,10 @@ with open(input_file, 'r') as csvfile:
     reader = csv.DictReader(csvfile)
 
     for row in reader:
+
         threads.append(int(row['Threads']))
         average_times.append(float(row['average_time_us']))
+
 
 plt.figure(figsize=(9, 5))
 

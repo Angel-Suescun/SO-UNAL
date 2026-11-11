@@ -11,9 +11,11 @@ output_file = project_dir / "results" / "benchmark.png"
 measurements = defaultdict(list)
 
 with input_file.open("r", newline="", encoding="utf-8") as file:
+    
     reader = csv.DictReader(file)
 
     for row in reader:
+       
         algorithm = row["algorithm"]
         size = int(row["size"])
         time_ms = float(row["time_ms"])
@@ -28,6 +30,7 @@ algorithms = {
 plt.figure(figsize=(10, 6))
 
 for algorithm, label in algorithms.items():
+   
     sizes = sorted(
         size for name, size in measurements
         if name == algorithm

@@ -20,11 +20,15 @@ public class QuickSort<T extends Comparable<? super T>> extends  RecursiveAction
     ) {
 
         if (array == null || pool == null) {
+       
             throw new IllegalArgumentException("El arreglo y el pool no pueden ser nulos");
+       
         }
 
         if (array.length > 1) {
+      
             pool.invoke(new QuickSort<>(array, 0, array.length - 1));
+      
         }
     }
 
@@ -62,15 +66,21 @@ public class QuickSort<T extends Comparable<? super T>> extends  RecursiveAction
 
         while (true) {
             do {
+         
                 left++;
+         
             } while (array[left].compareTo(pivot) < 0);
 
             do {
+         
                 right--;
+         
             } while (array[right].compareTo(pivot) > 0);
 
             if (left >= right) {
+         
                 return right;
+         
             }
 
             swap(left, right);
@@ -80,15 +90,19 @@ public class QuickSort<T extends Comparable<? super T>> extends  RecursiveAction
     private T medianOfThree(T first, T middle, T last) {
         
         if (first.compareTo(middle) > 0) {
+       
             T temporary = first;
             first = middle;
             middle = temporary;
+       
         }
 
         if (middle.compareTo(last) > 0) {
+       
             T temporary = middle;
             middle = last;
             last = temporary;
+       
         }
 
         if (first.compareTo(middle) > 0) {
@@ -96,18 +110,23 @@ public class QuickSort<T extends Comparable<? super T>> extends  RecursiveAction
             middle = first; 
 
         }
+       
         return middle;
     }
 
     private void insertionSort() {
         
         for (int index = low + 1; index <= high; index++) {
+       
             T key = array[index];
             int position = index - 1;
 
             while (position >= low && array[position].compareTo(key) > 0) {
+       
                 array[position + 1] = array[position];
+       
                 position--;
+       
             }
 
     

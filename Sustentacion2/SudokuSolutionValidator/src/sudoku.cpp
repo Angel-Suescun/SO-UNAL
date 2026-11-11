@@ -16,10 +16,15 @@ bool loadSudokuFromFile(const std::string& filepath, SudokuGrid& grid) {
     }
     
     for (int row = 0; row < GRID_SIZE; row++) {
+        
         for (int column = 0; column < GRID_SIZE; column++) {
+            
             if (!(inputFile >> grid[row][column])) {
+            
                 std::cerr << "Error: Sudoku incompleto o inválido en el archivo: " << filepath << '\n';
+            
                 return false;
+            
             }
         }
     }
@@ -27,7 +32,9 @@ bool loadSudokuFromFile(const std::string& filepath, SudokuGrid& grid) {
     std::string extraValue;
 
     if (inputFile >> extraValue) {
+        
         std::cerr << "Error: Sudoku tiene valores adicionales en el archivo: " << filepath << '\n';
+        
         return false;
     }
 

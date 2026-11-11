@@ -18,16 +18,23 @@ public class MergeSort <T extends Comparable<? super T>> extends RecursiveAction
     }
 
     public static <T extends Comparable<? super T>> void sort(
+ 
         T[] array, ForkJoinPool pool
+ 
     ) {
 
         if (array == null || pool == null) {
+ 
             throw new IllegalArgumentException("El arreglo y el pool no pueden ser nulos");
+ 
         }
 
         if (array.length > 1) {
+ 
             T[] auxiliary = array.clone();
+ 
             pool.invoke(new MergeSort<>(array, auxiliary, 0, array.length - 1));
+ 
         }
     }
 
@@ -65,31 +72,44 @@ public class MergeSort <T extends Comparable<? super T>> extends RecursiveAction
         int destinationIndex = low;
 
         while (leftIndex <= middle && rightIndex <= high) {
+ 
             if (auxiliary[leftIndex].compareTo(auxiliary[rightIndex]) <= 0) {
+ 
                 array[destinationIndex++] = auxiliary[leftIndex++];
+ 
             } else {
+ 
                 array[destinationIndex++] = auxiliary[rightIndex++];
+ 
             }
         }
 
         while (leftIndex <= middle) {
+ 
             array[destinationIndex++] = auxiliary[leftIndex++];
+ 
         }
 
         while (rightIndex <= high) {
+ 
             array[destinationIndex++] = auxiliary[rightIndex++];
+ 
         }
     }
 
     private void insertionSort() {
 
         for (int index = low + 1; index <= high; index++) {
+ 
             T currentElement = array[index];
+ 
             int position = index - 1;
 
             while (position >= low && array[position].compareTo(currentElement) > 0) {
+ 
                 array[position + 1] = array[position];
                 position--;
+ 
             }
 
             array[position + 1] = currentElement;

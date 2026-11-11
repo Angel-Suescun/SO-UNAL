@@ -22,8 +22,11 @@ public class Benchmark {
         int parallelism = args.length >= 2 ? Integer.parseInt(args[1]) : Runtime.getRuntime().availableProcessors();
 
         if (repetitions < 1 || parallelism < 1) {
+
             System.err.println("El número de repeticiones y el paralelismo deben ser mayores a 0");
+            
             return;
+        
         }
 
         ForkJoinPool pool = new ForkJoinPool(parallelism);
@@ -32,9 +35,12 @@ public class Benchmark {
             Files.createDirectories(Path.of("results"));
 
             try (BufferedWriter writer = Files.newBufferedWriter(Path.of("results", "benchmark.csv"))) {
+        
                 writer.write("algorithm,size,threads,repetition,time_ms");
+        
                 writer.newLine();
 
+        
                 System.out.println("Iniciando benchmark...");
                 warmUp(pool);
 
@@ -44,11 +50,16 @@ public class Benchmark {
                 System.out.println();
 
                 for (int size : SIZES) {
+        
                     benchmarkSize(size, repetitions, pool, writer);
+        
                 }
+        
             }
         } finally {
+        
             pool.shutdown();
+        
         }
 
         System.out.println("Benchmark completado. Resultados guardados en 'results/benchmark.csv'");
@@ -68,7 +79,6 @@ public class Benchmark {
 
     private static void benchmarkSize(int size, int repetitions, ForkJoinPool pool, BufferedWriter writer) throws IOException {
         
-
         for (int repetition = 1; repetition <= repetitions; repetition++){
 
             Integer[] originalArray = ArrayGenerator.ramdomIntegers(size, 2026L + (long) size * 31 + repetition);
@@ -80,15 +90,21 @@ public class Benchmark {
             long mergeTime;
 
             if (repetition % 2 == 1) {
+        
                 quickTime = measureQuickSort(quickSortArray, pool);
                 mergeTime = measureMergeSort(mergeSortArray, pool);
+        
             } else {
+        
                 mergeTime = measureMergeSort(mergeSortArray, pool);
                 quickTime = measureQuickSort(quickSortArray, pool);
+        
             }
 
             if (!ArrayGenerator.isSorted(quickSortArray) || !ArrayGenerator.isSorted(mergeSortArray)) {
+        
                 throw new IllegalStateException("El arreglo no está ordenado correctamente");
+        
             }
 
             double quickTimeMs = quickTime / 1_000_000.0;
@@ -111,15 +127,21 @@ public class Benchmark {
     private static long measureQuickSort(Integer[] array, ForkJoinPool pool) {
 
         long startTime = System.nanoTime();
+    
         QuickSort.sort(array, pool);
+    
         return System.nanoTime() - startTime;
+    
     }
 
     private static long measureMergeSort(Integer[] array, ForkJoinPool pool) {
 
         long startTime = System.nanoTime();
+    
         MergeSort.sort(array, pool);
+    
         return System.nanoTime() - startTime;
+    
     }
 
     private static void writeResult(
@@ -132,6 +154,7 @@ public class Benchmark {
 
         writer.write(String.format(Locale.ROOT, "%s,%d,%d,%d,%.6f",
                 algorithm, size, threads, repetition, timeMs));
+    
         writer.newLine();
     }
 }
